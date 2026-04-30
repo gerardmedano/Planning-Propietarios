@@ -215,9 +215,9 @@ const TimelineView = ({ user }) => {
                   {({ getIntervalProps, intervalContext, date }) => {
                     return (
                       <div {...getIntervalProps()} className="rct-dateHeader rct-dateHeader-primary">
-                        <span style={{ position: 'sticky', left: '50%', transform: 'translateX(-50%)', display: 'inline-block', fontWeight: 'bold' }}>
+                        <div style={{ position: 'sticky', left: '1rem', display: 'inline-block', fontWeight: 'bold', padding: '0 1rem' }}>
                           {intervalContext.intervalText}
-                        </span>
+                        </div>
                       </div>
                     );
                   }}
