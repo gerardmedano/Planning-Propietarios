@@ -156,7 +156,7 @@ const TimelineView = ({ user }) => {
 
       {!loading && groups.length > 0 ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button onClick={handleNavigateLeft} style={{ background: 'rgba(0,120,215,0.1)', border: '1px solid rgba(0,120,215,0.2)', borderRadius: '6px', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                 <ChevronLeft size={18} color="var(--primary)" />
@@ -165,6 +165,11 @@ const TimelineView = ({ user }) => {
                 <ChevronRight size={18} color="var(--primary)" />
               </button>
             </div>
+
+            <div style={{ fontWeight: 'bold', fontSize: '1.2rem', textTransform: 'capitalize', color: 'var(--primary)', textAlign: 'center' }}>
+              {moment(visibleTimeStart + (visibleTimeEnd - visibleTimeStart) / 2).format('MMMM YYYY')}
+            </div>
+
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button onClick={handleZoomOut} style={{ background: 'rgba(0,120,215,0.1)', border: '1px solid rgba(0,120,215,0.2)', borderRadius: '6px', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                 <ZoomOut size={18} color="var(--primary)" />
@@ -198,7 +203,7 @@ const TimelineView = ({ user }) => {
                     style={{ cursor: 'pointer', height: '100%', display: 'flex', alignItems: 'center', width: '100%' }}
                     title={`Ver calendario de ${group.title}`}
                   >
-                    <span style={{ paddingLeft: '0.5rem', fontWeight: '500', color: 'var(--primary)', textDecoration: 'underline' }}>
+                    <span style={{ paddingLeft: '0.5rem', fontWeight: '500', color: 'var(--primary)', textDecoration: 'underline', fontSize: sidebarWidth < 150 ? '0.75rem' : '1rem' }}>
                       {group.title}
                     </span>
                   </div>
@@ -208,20 +213,9 @@ const TimelineView = ({ user }) => {
               <TimelineHeaders>
                 <SidebarHeader>
                   {({ getRootProps }) => {
-                    return <div {...getRootProps()} className="rct-sidebar-header">Apartamentos</div>
+                    return <div {...getRootProps()} className="rct-sidebar-header">Aptos</div>
                   }}
                 </SidebarHeader>
-                <DateHeader unit="primaryHeader">
-                  {({ getIntervalProps, intervalContext, date }) => {
-                    return (
-                      <div {...getIntervalProps()} className="rct-dateHeader rct-dateHeader-primary">
-                        <div style={{ position: 'sticky', left: '1rem', display: 'inline-block', fontWeight: 'bold', padding: '0 1rem' }}>
-                          {intervalContext.intervalText}
-                        </div>
-                      </div>
-                    );
-                  }}
-                </DateHeader>
                 <DateHeader
                   labelFormat={([startTime], unit) => {
                     const t = moment(startTime.valueOf());
