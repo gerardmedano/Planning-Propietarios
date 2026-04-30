@@ -6,6 +6,7 @@ import moment from 'moment';
 import { getMockData, fetchReservations } from '../services/googleSheets';
 import { Calendar, RefreshCw, AlertCircle, ZoomIn, ZoomOut, X, Info, Users, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TimelineHeaders, SidebarHeader, DateHeader } from 'react-calendar-timeline';
+import ApartmentCalendarModal from './ApartmentCalendarModal';
 
 const TimelineView = ({ user }) => {
   const [groups, setGroups] = useState([]);
@@ -13,10 +14,11 @@ const TimelineView = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [visibleTimeStart, setVisibleTimeStart] = useState(moment().startOf('month').valueOf());
-  const [visibleTimeEnd, setVisibleTimeEnd] = useState(moment().endOf('month').valueOf());
+  const [visibleTimeStart, setVisibleTimeStart] = useState(moment().startOf('month').subtract(15, 'days').valueOf());
+  const [visibleTimeEnd, setVisibleTimeEnd] = useState(moment().endOf('month').add(45, 'days').valueOf());
   
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedApartment, setSelectedApartment] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(window.innerWidth < 768 ? 110 : 200);
 
   useEffect(() => {
@@ -94,6 +96,13 @@ const TimelineView = ({ user }) => {
     const item = items.find(i => i.id === itemId);
     if (item && item.details) {
       setSelectedItem(item);
+    }
+  };
+
+  const handleGroupClick = (groupId) => {
+    const group = groups.find(g => g.id === groupId);
+    if (group) {
+      setSelectedApartment(group);
     }
   };
 
@@ -182,6 +191,19 @@ const TimelineView = ({ user }) => {
               sidebarWidth={sidebarWidth}
               lineHeight={50}
               itemHeightRatio={0.75}
+              groupRenderer={({ group }) => {
+                return (
+                  <div 
+                    onClick={() => handleGroupClick(group.id)}
+                    style={{ cursor: 'pointer', height: '100%', display: 'flex', alignItems: 'center', width: '100%' }}
+                    title={`Ver calendario de ${group.title}`}
+                  >
+                    <span style={{ paddingLeft: '0.5rem', fontWeight: '500', color: 'var(--primary)', textDecoration: 'underline' }}>
+                      {group.title}
+                    </span>
+                  </div>
+                );
+              }}
             >
               <TimelineHeaders>
                 <SidebarHeader>
@@ -316,6 +338,19 @@ const TimelineView = ({ user }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal del Calendario Mensual del Apartamento */}
+      {selectedApartment && (
+        <ApartmentCalendarModal
+          apartment={selectedApartment}
+          reservations={items.filter(item => item.group === selectedApartment.id)}
+          onClose={() => setSelectedApartment(null)}
+          onSelectReservation={(itemId) => {
+            setSelectedApartment(null); // Cerrar calendario
+            handleItemSelect(itemId); // Abrir detalles
+          }}
+        />
       )}
       
       <style dangerouslySetInnerHTML={{__html: `
