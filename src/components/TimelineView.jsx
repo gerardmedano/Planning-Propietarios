@@ -189,7 +189,17 @@ const TimelineView = ({ user }) => {
                     return <div {...getRootProps()} className="rct-sidebar-header">Apartamentos</div>
                   }}
                 </SidebarHeader>
-                <DateHeader unit="primaryHeader" />
+                <DateHeader unit="primaryHeader">
+                  {({ getIntervalProps, intervalContext, date }) => {
+                    return (
+                      <div {...getIntervalProps()} className="rct-dateHeader rct-dateHeader-primary" style={{ ...getIntervalProps().style, overflow: 'hidden' }}>
+                        <span style={{ position: 'sticky', left: '0', display: 'inline-block', width: '100%', textAlign: 'center' }}>
+                          {intervalContext.intervalText}
+                        </span>
+                      </div>
+                    );
+                  }}
+                </DateHeader>
                 <DateHeader
                   labelFormat={([startTime], unit) => {
                     const t = moment(startTime.valueOf());
